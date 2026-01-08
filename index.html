@@ -31,6 +31,11 @@ header {
   margin-bottom: 20px;
 }
 
+.logo {
+  width: 130px;
+  margin-bottom: 10px;
+}
+
 header h1 {
   color: var(--azul);
   margin: 0;
@@ -101,14 +106,14 @@ li {
 <body>
 
 <header>
+  <img src="logo.png" alt="Logo Barbearia BK" class="logo">
   <h1>BARBEARIA BK</h1>
   <p>Sem agendamento • Chegou, entrou na fila</p>
 </header>
 
-<!-- STATUS + ENTRADA -->
+<!-- STATUS E ENTRADA -->
 <div class="card">
   <div id="statusTexto" class="status"></div>
-
   <input id="nomeCliente" placeholder="Digite seu nome">
   <button onclick="entrarFila()">Entrar na fila</button>
 </div>
@@ -135,17 +140,17 @@ li {
   <button onclick="limparFila()">Limpar Fila</button>
 </div>
 
-<!-- REDES -->
+<!-- REDES SOCIAIS -->
 <div class="card social">
   <button onclick="abrirWhats()">WhatsApp</button>
   <button onclick="abrirInsta()">Instagram</button>
 </div>
 
 <script>
-/* ===== CONFIG ===== */
+/* ===== CONFIGURAÇÕES ===== */
 const WHATSAPP = "5583998792009";
 const INSTAGRAM = "https://www.instagram.com/barbearia_bk";
-const SENHA_ADMIN = "bk2026"; // TROQUE SE QUISER
+const SENHA_ADMIN = "bk2026"; // MUDE SE QUISER
 
 let status = localStorage.getItem("status") || "DISPONÍVEL";
 let fila = JSON.parse(localStorage.getItem("fila")) || [];
@@ -175,8 +180,8 @@ function atualizarTela() {
 
   const lista = document.getElementById("fila");
   lista.innerHTML = "";
-  fila.forEach((n, i) => {
-    lista.innerHTML += `<li>${i + 1}. ${n}</li>`;
+  fila.forEach((nome, i) => {
+    lista.innerHTML += `<li>${i + 1}. ${nome}</li>`;
   });
 }
 
@@ -222,8 +227,8 @@ function abrirInsta() {
 }
 
 function loginAdmin() {
-  const s = document.getElementById("senhaAdmin").value;
-  if (s === SENHA_ADMIN) {
+  const senha = document.getElementById("senhaAdmin").value;
+  if (senha === SENHA_ADMIN) {
     document.getElementById("adminPainel").style.display = "block";
     document.getElementById("loginAdmin").style.display = "none";
   } else {
