@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -103,7 +102,6 @@ li {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding-bottom: 10px;
 }
 
 .galeria img {
@@ -111,13 +109,17 @@ li {
   border-radius: 14px;
   border: 2px solid var(--azul);
 }
+
+/* ADMIN */
+.admin {
+  display: none;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-  <!-- LOGO -->
   <img src="logo.png" alt="Logo Barbearia BK">
   <h1>BARBEARIA BK</h1>
   <p>Sem agendamento • Chegou, entrou na fila</p>
@@ -125,7 +127,6 @@ li {
 
 <div class="card">
   <div id="statusTexto" class="status"></div>
-
   <input id="nomeCliente" placeholder="Digite seu nome">
   <button onclick="entrarFila()">Entrar na fila</button>
 </div>
@@ -133,13 +134,27 @@ li {
 <div class="card">
   <p><strong>💈 Atendendo agora:</strong> <span id="atual">---</span></p>
   <p><strong>➡️ Próximo pode vir:</strong> <span id="proximo">---</span></p>
-
   <ul id="fila"></ul>
 </div>
 
 <div class="card social">
   <button onclick="abrirWhats()">WhatsApp</button>
   <button onclick="abrirInsta()">Instagram</button>
+</div>
+
+<!-- LOGIN ADMIN -->
+<div class="card">
+  <h3>Painel do Barbeiro</h3>
+  <input type="password" id="senhaAdmin" placeholder="Senha do barbeiro">
+  <button onclick="loginAdmin()">Entrar</button>
+</div>
+
+<!-- PAINEL ADMIN -->
+<div class="card admin" id="painelAdmin">
+  <h3>Controle do Atendimento</h3>
+  <button onclick="mudarStatus()">Alterar Status</button>
+  <button onclick="avancar()">Avançar Atendimento</button>
+  <button onclick="limparFila()">Limpar Fila</button>
 </div>
 
 <div class="card">
@@ -154,9 +169,10 @@ li {
 </div>
 
 <script>
-/* CONFIG */
+/* CONFIGURAÇÕES */
 const WHATSAPP = "5583998792009";
 const INSTAGRAM = "barbearia_bk";
+const SENHA_ADMIN = "1234"; // 👉 TROQUE AQUI
 
 let status = localStorage.getItem("status") || "DISPONÍVEL";
 let fila = JSON.parse(localStorage.getItem("fila")) || [];
@@ -190,9 +206,36 @@ function atualizarTela() {
 function entrarFila() {
   const nome = document.getElementById("nomeCliente").value.trim();
   if (!nome) return;
-
   fila.push(nome);
   document.getElementById("nomeCliente").value = "";
+  salvar();
+  atualizarTela();
+}
+
+function loginAdmin() {
+  const senha = document.getElementById("senhaAdmin").value;
+  if (senha === SENHA_ADMIN) {
+    document.getElementById("painelAdmin").style.display = "block";
+    alert("Painel liberado");
+  } else {
+    alert("Senha incorreta");
+  }
+}
+
+function mudarStatus() {
+  status = status === "DISPONÍVEL" ? "EM ATENDIMENTO" : "DISPONÍVEL";
+  salvar();
+  atualizarTela();
+}
+
+function avancar() {
+  fila.shift();
+  salvar();
+  atualizarTela();
+}
+
+function limparFila() {
+  fila = [];
   salvar();
   atualizarTela();
 }
