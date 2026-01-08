@@ -1,192 +1,210 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Barbearia Black | BK</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Barbearia Black | BK</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    :root {
-      --bg: #000;
-      --azul: #7ecbff;
-      --texto: #fff;
-    }
+<style>
+:root {
+  --fundo: #000;
+  --azul: #7ecbff;
+  --verde: #00ff88;
+  --vermelho: #ff4d4d;
+  --texto: #fff;
+}
 
-    * {
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--texto);
-      padding: 20px;
-    }
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  padding: 20px;
+}
 
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-    header h1 {
-      margin: 0;
-      font-size: 32px;
-      color: var(--azul);
-    }
+header h1 {
+  color: var(--azul);
+  margin: 0;
+  font-size: 34px;
+}
 
-    .card {
-      border: 2px solid var(--azul);
-      border-radius: 15px;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
+.card {
+  border: 2px solid var(--azul);
+  border-radius: 18px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
 
-    input, button {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      margin-top: 8px;
-      font-size: 16px;
-    }
+.status {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
-    input {
-      background: #111;
-      color: white;
-      border: 1px solid var(--azul);
-    }
+input, button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  margin-top: 8px;
+}
 
-    button {
-      background: var(--azul);
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-    }
+input {
+  background: #111;
+  color: white;
+  border: 1px solid var(--azul);
+}
 
-    button:disabled {
-      background: gray;
-      cursor: not-allowed;
-    }
+button {
+  background: var(--azul);
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    .status {
-      font-size: 18px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 10px;
-    }
+ul {
+  list-style: none;
+  padding: 0;
+}
 
-    ul {
-      list-style: none;
-      padding: 0;
-    }
+li {
+  border-bottom: 1px solid #333;
+  padding: 6px 0;
+}
 
-    li {
-      padding: 6px 0;
-      border-bottom: 1px solid #333;
-    }
+.admin button {
+  margin-top: 6px;
+}
 
-    .admin button {
-      margin-top: 6px;
-    }
+.social {
+  display: flex;
+  gap: 10px;
+}
 
-    .social {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
-  </style>
+.social button {
+  flex: 1;
+}
+</style>
 </head>
+
 <body>
 
 <header>
   <h1>BARBEARIA BK</h1>
-  <p>Simples • Rápido • Sem agendamento</p>
+  <p>Sem agendamento • Chegou, entrou na fila</p>
 </header>
 
 <div class="card">
-  <div class="status" id="statusTexto">Status: DISPONÍVEL</div>
+  <div id="statusTexto" class="status"></div>
 
   <input id="nomeCliente" placeholder="Digite seu nome">
   <button onclick="entrarFila()">Entrar na fila</button>
 </div>
 
 <div class="card">
-  <p><strong>Atendendo agora:</strong> <span id="atual">---</span></p>
-  <p><strong>Próximo:</strong> <span id="proximo">---</span></p>
+  <p><strong>💈 Atendendo agora:</strong> <span id="atual">---</span></p>
+  <p><strong>➡️ Próximo:</strong> <span id="proximo">---</span></p>
 
   <ul id="fila"></ul>
 </div>
 
 <div class="card admin">
   <h3>Painel do Barbeiro</h3>
-
   <button onclick="mudarStatus()">Alterar Status</button>
   <button onclick="avancar()">Avançar Atendimento</button>
   <button onclick="limparFila()">Limpar Fila</button>
 </div>
 
 <div class="card social">
-  <button onclick="window.open('https://wa.me/55SEUNUMERO')">WhatsApp</button>
-  <button onclick="window.open('https://instagram.com/SEUINSTAGRAM')">Instagram</button>
+  <button onclick="abrirWhats()">WhatsApp</button>
+  <button onclick="abrirInsta()">Instagram</button>
 </div>
 
 <script>
-  let status = localStorage.getItem("status") || "DISPONÍVEL";
-  let fila = JSON.parse(localStorage.getItem("fila")) || [];
+/* ===== CONFIGURAÇÕES ===== */
+const WHATSAPP = "5591999999999"; // TROQUE AQUI
+const INSTAGRAM = "barbeariabk"; // TROQUE AQUI
 
-  function salvar() {
-    localStorage.setItem("fila", JSON.stringify(fila));
-    localStorage.setItem("status", status);
+let status = localStorage.getItem("status") || "DISPONÍVEL";
+let fila = JSON.parse(localStorage.getItem("fila")) || [];
+
+/* ===== FUNÇÕES ===== */
+function salvar() {
+  localStorage.setItem("status", status);
+  localStorage.setItem("fila", JSON.stringify(fila));
+}
+
+function atualizarTela() {
+  const statusDiv = document.getElementById("statusTexto");
+
+  if (status === "DISPONÍVEL") {
+    statusDiv.style.color = "var(--verde)";
+    statusDiv.innerText = "🟢 DISPONÍVEL – Pode entrar na fila";
+  } else {
+    statusDiv.style.color = "var(--vermelho)";
+    statusDiv.innerText = "🔴 EM ATENDIMENTO – Pode entrar na fila";
   }
 
-  function atualizarTela() {
-    document.getElementById("statusTexto").innerText = "Status: " + status;
+  document.getElementById("atual").innerText = fila[0] || "---";
+  document.getElementById("proximo").innerText = fila[1] || "---";
 
-    document.querySelector("button").disabled = status !== "DISPONÍVEL";
+  const lista = document.getElementById("fila");
+  lista.innerHTML = "";
+  fila.forEach((nome, i) => {
+    lista.innerHTML += `<li>${i + 1}. ${nome}</li>`;
+  });
+}
 
-    document.getElementById("atual").innerText = fila[0] || "---";
-    document.getElementById("proximo").innerText = fila[1] || "---";
+function entrarFila() {
+  const nome = document.getElementById("nomeCliente").value.trim();
+  if (!nome) return;
 
-    let lista = document.getElementById("fila");
-    lista.innerHTML = "";
-    fila.forEach((nome, i) => {
-      lista.innerHTML += `<li>${i + 1}. ${nome}</li>`;
-    });
-  }
-
-  function entrarFila() {
-    if (status !== "DISPONÍVEL") return;
-
-    let nome = document.getElementById("nomeCliente").value.trim();
-    if (!nome) return;
-
-    fila.push(nome);
-    document.getElementById("nomeCliente").value = "";
-    salvar();
-    atualizarTela();
-  }
-
-  function mudarStatus() {
-    status = status === "DISPONÍVEL" ? "EM ATENDIMENTO" : "DISPONÍVEL";
-    salvar();
-    atualizarTela();
-  }
-
-  function avancar() {
-    fila.shift();
-    salvar();
-    atualizarTela();
-  }
-
-  function limparFila() {
-    fila = [];
-    salvar();
-    atualizarTela();
-  }
-
+  fila.push(nome);
+  document.getElementById("nomeCliente").value = "";
+  salvar();
   atualizarTela();
+}
+
+function mudarStatus() {
+  status = status === "DISPONÍVEL"
+    ? "EM ATENDIMENTO"
+    : "DISPONÍVEL";
+  salvar();
+  atualizarTela();
+}
+
+function avancar() {
+  fila.shift();
+  salvar();
+  atualizarTela();
+}
+
+function limparFila() {
+  fila = [];
+  salvar();
+  atualizarTela();
+}
+
+function abrirWhats() {
+  window.open(`https://wa.me/${WHATSAPP}`, "_blank");
+}
+
+function abrirInsta() {
+  window.open(`https://instagram.com/${INSTAGRAM}`, "_blank");
+}
+
+atualizarTela();
 </script>
 
 </body>
