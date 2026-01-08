@@ -3,111 +3,113 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Barbearia BK</title>
+<title>Barbearia Black | BK</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{
-  --azul:#7ecbff;
-  --verde:#00ff88;
-  --vermelho:#ff4d4d;
+:root {
+  --fundo: #000;
+  --azul: #7ecbff;
+  --verde: #00ff88;
+  --vermelho: #ff4d4d;
+  --texto: #fff;
 }
 
-*{
-  box-sizing:border-box;
-  font-family:Arial,sans-serif;
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-body{
-  margin:0;
-  background:#000;
-  color:#fff;
-  padding:20px;
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  padding: 20px;
 }
 
-header{
-  text-align:center;
-  margin-bottom:20px;
+header {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-header img{
-  width:120px;
-  margin-bottom:10px;
+header img {
+  width: 120px;
+  margin-bottom: 10px;
 }
 
-.card{
-  border:2px solid var(--azul);
-  border-radius:18px;
-  padding:15px;
-  margin-bottom:15px;
+header h1 {
+  color: var(--azul);
+  margin: 0;
+  font-size: 34px;
 }
 
-.status{
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
-  margin-bottom:10px;
+.card {
+  border: 2px solid var(--azul);
+  border-radius: 18px;
+  padding: 15px;
+  margin-bottom: 15px;
 }
 
-input,button{
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  border:none;
-  font-size:16px;
-  margin-top:8px;
+.status {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-input{
-  background:#111;
-  color:#fff;
-  border:1px solid var(--azul);
+input, button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  margin-top: 8px;
 }
 
-button{
-  background:var(--azul);
-  color:#000;
-  font-weight:bold;
-  cursor:pointer;
+input {
+  background: #111;
+  color: white;
+  border: 1px solid var(--azul);
 }
 
-.admin{
-  display:none;
+button {
+  background: var(--azul);
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.social{
-  display:flex;
-  gap:10px;
+ul {
+  list-style: none;
+  padding: 0;
 }
 
-.social button{
-  flex:1;
+li {
+  border-bottom: 1px solid #333;
+  padding: 6px 0;
+}
+
+.social {
+  display: flex;
+  gap: 10px;
+}
+
+.social button {
+  flex: 1;
 }
 
 /* GALERIA */
-.galeria{
-  overflow:hidden;
-  border-radius:18px;
-  border:2px solid var(--azul);
-  padding:10px;
+.galeria {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 10px;
 }
 
-.galeria-track{
-  display:flex;
-  animation:scroll 20s linear infinite;
-}
-
-.galeria img{
-  width:140px;
-  height:200px;
-  object-fit:cover;
-  border-radius:14px;
-  margin-right:10px;
-}
-
-@keyframes scroll{
-  0%{transform:translateX(0);}
-  100%{transform:translateX(-50%);}
+.galeria img {
+  height: 160px;
+  border-radius: 14px;
+  border: 2px solid var(--azul);
 }
 </style>
 </head>
@@ -115,33 +117,24 @@ button{
 <body>
 
 <header>
+  <!-- LOGO -->
   <img src="logo.png" alt="Logo Barbearia BK">
-  <h1 style="color:var(--azul)">BARBEARIA BK</h1>
+  <h1>BARBEARIA BK</h1>
   <p>Sem agendamento • Chegou, entrou na fila</p>
 </header>
 
 <div class="card">
   <div id="statusTexto" class="status"></div>
+
   <input id="nomeCliente" placeholder="Digite seu nome">
   <button onclick="entrarFila()">Entrar na fila</button>
 </div>
 
 <div class="card">
-  <p>💈 <strong>Atendendo agora:</strong> <span id="atual">---</span></p>
-  <p>➡️ <strong>Próximo pode vir:</strong> <span id="proximo">---</span></p>
+  <p><strong>💈 Atendendo agora:</strong> <span id="atual">---</span></p>
+  <p><strong>➡️ Próximo pode vir:</strong> <span id="proximo">---</span></p>
+
   <ul id="fila"></ul>
-</div>
-
-<div class="card">
-  <input id="senha" type="password" placeholder="Senha do barbeiro">
-  <button onclick="login()">Entrar como barbeiro</button>
-</div>
-
-<div class="card admin" id="admin">
-  <h3>Painel do Barbeiro</h3>
-  <button onclick="mudarStatus()">Disponível / Atendimento</button>
-  <button onclick="avancar()">Avançar Atendimento</button>
-  <button onclick="limparFila()">Limpar Fila</button>
 </div>
 
 <div class="card social">
@@ -150,99 +143,69 @@ button{
 </div>
 
 <div class="card">
-  <h3 style="text-align:center">🔥 Nossos cortes</h3>
+  <h3 style="text-align:center;">🔥 Nossos cortes</h3>
   <div class="galeria">
-    <div class="galeria-track">
-      <img src="foto1.jpg">
-      <img src="foto2.jpg">
-      <img src="foto3.jpg">
-      <img src="foto4.jpg">
-      <img src="foto5.jpg">
-
-      <!-- repete para rolagem infinita -->
-      <img src="foto1.jpg">
-      <img src="foto2.jpg">
-      <img src="foto3.jpg">
-      <img src="foto4.jpg">
-      <img src="foto5.jpg">
-    </div>
+    <img src="foto1.jpg">
+    <img src="foto2.jpg">
+    <img src="foto3.jpg">
+    <img src="foto4.jpg">
+    <img src="foto5.jpg">
   </div>
 </div>
 
 <script>
-const WHATSAPP="5583998792009";
-const INSTAGRAM="barbearia_bk";
-const SENHA="1234"; // TROQUE SUA SENHA AQUI
+/* CONFIG */
+const WHATSAPP = "5583998792009";
+const INSTAGRAM = "barbearia_bk";
 
-let status=localStorage.getItem("status")||"DISPONÍVEL";
-let fila=JSON.parse(localStorage.getItem("fila"))||[];
+let status = localStorage.getItem("status") || "DISPONÍVEL";
+let fila = JSON.parse(localStorage.getItem("fila")) || [];
 
-function salvar(){
-  localStorage.setItem("status",status);
-  localStorage.setItem("fila",JSON.stringify(fila));
+function salvar() {
+  localStorage.setItem("status", status);
+  localStorage.setItem("fila", JSON.stringify(fila));
 }
 
-function atualizar(){
-  const st=document.getElementById("statusTexto");
-  if(status==="DISPONÍVEL"){
-    st.style.color="var(--verde)";
-    st.innerText="🟢 DISPONÍVEL – Pode entrar na fila";
-  }else{
-    st.style.color="var(--vermelho)";
-    st.innerText="🔴 EM ATENDIMENTO – Pode entrar na fila";
+function atualizarTela() {
+  const statusDiv = document.getElementById("statusTexto");
+
+  if (status === "DISPONÍVEL") {
+    statusDiv.style.color = "var(--verde)";
+    statusDiv.innerText = "🟢 DISPONÍVEL – Pode entrar na fila";
+  } else {
+    statusDiv.style.color = "var(--vermelho)";
+    statusDiv.innerText = "🔴 EM ATENDIMENTO – Pode entrar na fila";
   }
 
-  document.getElementById("atual").innerText=fila[0]||"---";
-  document.getElementById("proximo").innerText=fila[1]||"---";
+  document.getElementById("atual").innerText = fila[0] || "---";
+  document.getElementById("proximo").innerText = fila[1] || "---";
 
-  const ul=document.getElementById("fila");
-  ul.innerHTML="";
-  fila.forEach((n,i)=>{
-    ul.innerHTML+=`<li>${i+1}. ${n}</li>`;
+  const lista = document.getElementById("fila");
+  lista.innerHTML = "";
+  fila.forEach((nome, i) => {
+    lista.innerHTML += `<li>${i + 1}. ${nome}</li>`;
   });
 }
 
-function entrarFila(){
-  const nome=document.getElementById("nomeCliente").value.trim();
-  if(!nome) return;
+function entrarFila() {
+  const nome = document.getElementById("nomeCliente").value.trim();
+  if (!nome) return;
+
   fila.push(nome);
-  document.getElementById("nomeCliente").value="";
-  salvar(); atualizar();
+  document.getElementById("nomeCliente").value = "";
+  salvar();
+  atualizarTela();
 }
 
-function mudarStatus(){
-  status=status==="DISPONÍVEL"?"EM ATENDIMENTO":"DISPONÍVEL";
-  salvar(); atualizar();
+function abrirWhats() {
+  window.open(`https://wa.me/${WHATSAPP}`, "_blank");
 }
 
-function avancar(){
-  fila.shift();
-  salvar(); atualizar();
+function abrirInsta() {
+  window.open(`https://instagram.com/${INSTAGRAM}`, "_blank");
 }
 
-function limparFila(){
-  fila=[];
-  salvar(); atualizar();
-}
-
-function login(){
-  if(document.getElementById("senha").value===SENHA){
-    document.getElementById("admin").style.display="block";
-    alert("Bem-vindo barbeiro!");
-  }else{
-    alert("Senha incorreta");
-  }
-}
-
-function abrirWhats(){
-  window.open(`https://wa.me/${WHATSAPP}`,"_blank");
-}
-
-function abrirInsta(){
-  window.open(`https://instagram.com/${INSTAGRAM}`,"_blank");
-}
-
-atualizar();
+atualizarTela();
 </script>
 
 </body>
