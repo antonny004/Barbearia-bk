@@ -3,126 +3,111 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Barbearia Black | BK</title>
+<title>Barbearia BK</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root {
-  --fundo: #000;
-  --azul: #7ecbff;
-  --verde: #00ff88;
-  --vermelho: #ff4d4d;
-  --texto: #fff;
+:root{
+  --azul:#7ecbff;
+  --verde:#00ff88;
+  --vermelho:#ff4d4d;
 }
 
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+*{
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
 }
 
-body {
-  margin: 0;
-  background: var(--fundo);
-  color: var(--texto);
-  padding: 20px;
+body{
+  margin:0;
+  background:#000;
+  color:#fff;
+  padding:20px;
 }
 
-header {
-  text-align: center;
-  margin-bottom: 20px;
+header{
+  text-align:center;
+  margin-bottom:20px;
 }
 
-.logo {
-  width: 130px;
-  margin-bottom: 10px;
+header img{
+  width:120px;
+  margin-bottom:10px;
 }
 
-header h1 {
-  color: var(--azul);
-  margin: 0;
-  font-size: 34px;
+.card{
+  border:2px solid var(--azul);
+  border-radius:18px;
+  padding:15px;
+  margin-bottom:15px;
 }
 
-.card {
-  border: 2px solid var(--azul);
-  border-radius: 18px;
-  padding: 15px;
-  margin-bottom: 15px;
+.status{
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:10px;
 }
 
-.status {
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
+input,button{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  font-size:16px;
+  margin-top:8px;
 }
 
-input, button {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-size: 16px;
-  margin-top: 8px;
+input{
+  background:#111;
+  color:#fff;
+  border:1px solid var(--azul);
 }
 
-input {
-  background: #111;
-  color: white;
-  border: 1px solid var(--azul);
+button{
+  background:var(--azul);
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-button {
-  background: var(--azul);
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
+.admin{
+  display:none;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
+.social{
+  display:flex;
+  gap:10px;
 }
 
-li {
-  border-bottom: 1px solid #333;
-  padding: 6px 0;
+.social button{
+  flex:1;
 }
 
-.social {
-  display: flex;
-  gap: 10px;
+/* GALERIA */
+.galeria{
+  overflow:hidden;
+  border-radius:18px;
+  border:2px solid var(--azul);
+  padding:10px;
 }
 
-.social button {
-  flex: 1;
+.galeria-track{
+  display:flex;
+  animation:scroll 20s linear infinite;
 }
 
-.admin {
-  display: none;
+.galeria img{
+  width:140px;
+  height:200px;
+  object-fit:cover;
+  border-radius:14px;
+  margin-right:10px;
 }
 
-/* ===== GALERIA ===== */
-.galeria {
-  overflow: hidden;
-  width: 100%;
-}
-
-.galeria-track {
-  display: flex;
-  gap: 10px;
-  animation: rolar 25s linear infinite;
-}
-
-.galeria img {
-  height: 120px;
-  border-radius: 14px;
-  border: 2px solid var(--azul);
-}
-
-@keyframes rolar {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+@keyframes scroll{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
 }
 </style>
 </head>
@@ -130,156 +115,134 @@ li {
 <body>
 
 <header>
-  <img src="logo.png" alt="Logo Barbearia BK" class="logo">
-  <h1>BARBEARIA BK</h1>
+  <img src="logo.png" alt="Logo Barbearia BK">
+  <h1 style="color:var(--azul)">BARBEARIA BK</h1>
   <p>Sem agendamento • Chegou, entrou na fila</p>
 </header>
 
-<!-- STATUS + ENTRADA -->
 <div class="card">
   <div id="statusTexto" class="status"></div>
   <input id="nomeCliente" placeholder="Digite seu nome">
   <button onclick="entrarFila()">Entrar na fila</button>
 </div>
 
-<!-- FILA -->
 <div class="card">
-  <p><strong>💈 Atendendo agora:</strong> <span id="atual">---</span></p>
-  <p><strong>➡️ Próximo pode vir:</strong> <span id="proximo">---</span></p>
+  <p>💈 <strong>Atendendo agora:</strong> <span id="atual">---</span></p>
+  <p>➡️ <strong>Próximo pode vir:</strong> <span id="proximo">---</span></p>
   <ul id="fila"></ul>
 </div>
 
-<!-- LOGIN BARBEIRO -->
-<div class="card" id="loginAdmin">
-  <input id="senhaAdmin" type="password" placeholder="Senha do barbeiro">
-  <button onclick="loginAdmin()">Entrar como barbeiro</button>
+<div class="card">
+  <input id="senha" type="password" placeholder="Senha do barbeiro">
+  <button onclick="login()">Entrar como barbeiro</button>
 </div>
 
-<!-- PAINEL BARBEIRO -->
-<div class="card admin" id="adminPainel">
+<div class="card admin" id="admin">
   <h3>Painel do Barbeiro</h3>
   <button onclick="mudarStatus()">Disponível / Atendimento</button>
-  <button onclick="fecharBarbearia()">Fechado</button>
   <button onclick="avancar()">Avançar Atendimento</button>
   <button onclick="limparFila()">Limpar Fila</button>
 </div>
 
-<!-- REDES -->
 <div class="card social">
   <button onclick="abrirWhats()">WhatsApp</button>
   <button onclick="abrirInsta()">Instagram</button>
 </div>
 
-<!-- GALERIA ROLANDO -->
 <div class="card">
-  <h3 style="text-align:center;color:var(--azul)">🔥 Nossos cortes</h3>
+  <h3 style="text-align:center">🔥 Nossos cortes</h3>
   <div class="galeria">
     <div class="galeria-track">
-      <img src="fotos/foto1.jpg">
-      <img src="fotos/foto2.jpg">
-      <img src="fotos/foto3.jpg">
-      <img src="fotos/foto4.jpg">
-      <img src="fotos/foto5.jpg">
+      <img src="foto1.jpg">
+      <img src="foto2.jpg">
+      <img src="foto3.jpg">
+      <img src="foto4.jpg">
+      <img src="foto5.jpg">
 
-      <!-- DUPLICADO PARA LOOP -->
-      <img src="fotos/foto1.jpg">
-      <img src="fotos/foto2.jpg">
-      <img src="fotos/foto3.jpg">
-      <img src="fotos/foto4.jpg">
-      <img src="fotos/foto5.jpg">
+      <!-- repete para rolagem infinita -->
+      <img src="foto1.jpg">
+      <img src="foto2.jpg">
+      <img src="foto3.jpg">
+      <img src="foto4.jpg">
+      <img src="foto5.jpg">
     </div>
   </div>
 </div>
 
 <script>
-const WHATSAPP = "5583998792009";
-const INSTAGRAM = "https://www.instagram.com/barbearia_bk";
-const SENHA_ADMIN = "bk2026";
+const WHATSAPP="5583998792009";
+const INSTAGRAM="barbearia_bk";
+const SENHA="1234"; // TROQUE SUA SENHA AQUI
 
-let status = localStorage.getItem("status") || "DISPONÍVEL";
-let fila = JSON.parse(localStorage.getItem("fila")) || [];
+let status=localStorage.getItem("status")||"DISPONÍVEL";
+let fila=JSON.parse(localStorage.getItem("fila"))||[];
 
-function salvar() {
-  localStorage.setItem("status", status);
-  localStorage.setItem("fila", JSON.stringify(fila));
+function salvar(){
+  localStorage.setItem("status",status);
+  localStorage.setItem("fila",JSON.stringify(fila));
 }
 
-function atualizarTela() {
-  const s = document.getElementById("statusTexto");
-
-  if (status === "DISPONÍVEL") {
-    s.style.color = "var(--verde)";
-    s.innerText = "🟢 DISPONÍVEL – Pode entrar na fila";
-  } else if (status === "EM ATENDIMENTO") {
-    s.style.color = "var(--vermelho)";
-    s.innerText = "🔴 EM ATENDIMENTO – Pode entrar na fila";
-  } else {
-    s.style.color = "#aaa";
-    s.innerText = "⚫ FECHADO – Volte mais tarde";
+function atualizar(){
+  const st=document.getElementById("statusTexto");
+  if(status==="DISPONÍVEL"){
+    st.style.color="var(--verde)";
+    st.innerText="🟢 DISPONÍVEL – Pode entrar na fila";
+  }else{
+    st.style.color="var(--vermelho)";
+    st.innerText="🔴 EM ATENDIMENTO – Pode entrar na fila";
   }
 
-  document.getElementById("atual").innerText = fila[0] || "---";
-  document.getElementById("proximo").innerText = fila[1] || "---";
+  document.getElementById("atual").innerText=fila[0]||"---";
+  document.getElementById("proximo").innerText=fila[1]||"---";
 
-  const lista = document.getElementById("fila");
-  lista.innerHTML = "";
-  fila.forEach((n, i) => {
-    lista.innerHTML += `<li>${i + 1}. ${n}</li>`;
+  const ul=document.getElementById("fila");
+  ul.innerHTML="";
+  fila.forEach((n,i)=>{
+    ul.innerHTML+=`<li>${i+1}. ${n}</li>`;
   });
 }
 
-function entrarFila() {
-  const nome = document.getElementById("nomeCliente").value.trim();
-  if (!nome || status === "FECHADO") return;
+function entrarFila(){
+  const nome=document.getElementById("nomeCliente").value.trim();
+  if(!nome) return;
   fila.push(nome);
-  document.getElementById("nomeCliente").value = "";
-  salvar();
-  atualizarTela();
+  document.getElementById("nomeCliente").value="";
+  salvar(); atualizar();
 }
 
-function mudarStatus() {
-  status = status === "DISPONÍVEL" ? "EM ATENDIMENTO" : "DISPONÍVEL";
-  salvar();
-  atualizarTela();
+function mudarStatus(){
+  status=status==="DISPONÍVEL"?"EM ATENDIMENTO":"DISPONÍVEL";
+  salvar(); atualizar();
 }
 
-function fecharBarbearia() {
-  status = "FECHADO";
-  salvar();
-  atualizarTela();
-}
-
-function avancar() {
+function avancar(){
   fila.shift();
-  salvar();
-  atualizarTela();
+  salvar(); atualizar();
 }
 
-function limparFila() {
-  fila = [];
-  salvar();
-  atualizarTela();
+function limparFila(){
+  fila=[];
+  salvar(); atualizar();
 }
 
-function abrirWhats() {
-  window.open(`https://wa.me/${WHATSAPP}`, "_blank");
-}
-
-function abrirInsta() {
-  window.open(INSTAGRAM, "_blank");
-}
-
-function loginAdmin() {
-  const senha = document.getElementById("senhaAdmin").value;
-  if (senha === SENHA_ADMIN) {
-    document.getElementById("adminPainel").style.display = "block";
-    document.getElementById("loginAdmin").style.display = "none";
-  } else {
+function login(){
+  if(document.getElementById("senha").value===SENHA){
+    document.getElementById("admin").style.display="block";
+    alert("Bem-vindo barbeiro!");
+  }else{
     alert("Senha incorreta");
   }
 }
 
-atualizarTela();
+function abrirWhats(){
+  window.open(`https://wa.me/${WHATSAPP}`,"_blank");
+}
+
+function abrirInsta(){
+  window.open(`https://instagram.com/${INSTAGRAM}`,"_blank");
+}
+
+atualizar();
 </script>
 
 </body>
