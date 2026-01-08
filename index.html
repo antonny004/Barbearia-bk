@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -31,6 +30,16 @@ body {
 header {
   text-align: center;
   margin-bottom: 20px;
+}
+
+/* 🔵 ESTILO DA FOTO / LOGO */
+.logo {
+  width: 130px;              /* TAMANHO DA FOTO */
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;        /* DEIXA REDONDA */
+  border: 3px solid var(--azul);
+  margin-bottom: 10px;
 }
 
 header h1 {
@@ -109,6 +118,10 @@ li {
 <body>
 
 <header>
+  <!-- 📸 AQUI É ONDE FICA A FOTO / LOGO -->
+  <!-- 👉 O NOME DO ARQUIVO TEM QUE SER: logo.png -->
+  <img src="logo.png" alt="Logo Barbearia BK" class="logo">
+
   <h1>BARBEARIA BK</h1>
   <p>Sem agendamento • Chegou, entrou na fila</p>
 </header>
@@ -142,8 +155,8 @@ li {
 
 <script>
 /* ===== CONFIGURAÇÕES ===== */
-const WHATSAPP = "5591999999999"; // TROQUE AQUI
-const INSTAGRAM = "barbeariabk"; // TROQUE AQUI
+const WHATSAPP = "5591999999999"; // COLOQUE SEU NÚMERO AQUI
+const INSTAGRAM = "barbeariabk"; // COLOQUE SEU @ AQUI (SEM @)
 
 let status = localStorage.getItem("status") || "DISPONÍVEL";
 let fila = JSON.parse(localStorage.getItem("fila")) || [];
