@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -11,6 +12,7 @@
   --azul: #7ecbff;
   --verde: #00ff88;
   --vermelho: #ff4d4d;
+  --cinza: #aaaaaa;
   --texto: #fff;
 }
 
@@ -73,6 +75,12 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  background: #444;
+  color: #999;
+  cursor: not-allowed;
+}
+
 ul {
   list-style: none;
   padding: 0;
@@ -109,7 +117,7 @@ li {
   <div id="statusTexto" class="status"></div>
 
   <input id="nomeCliente" placeholder="Digite seu nome">
-  <button onclick="entrarFila()">Entrar na fila</button>
+  <button id="btnFila" onclick="entrarFila()">Entrar na fila</button>
 </div>
 
 <div class="card">
@@ -121,7 +129,8 @@ li {
 
 <div class="card admin">
   <h3>Painel do Barbeiro</h3>
-  <button onclick="mudarStatus()">Alterar Status</button>
+  <button onclick="mudarStatus()">Disponível / Atendimento</button>
+  <button onclick="fecharBarbearia()">Fechado</button>
   <button onclick="avancar()">Avançar Atendimento</button>
   <button onclick="limparFila()">Limpar Fila</button>
 </div>
@@ -147,13 +156,22 @@ function salvar() {
 
 function atualizarTela() {
   const statusDiv = document.getElementById("statusTexto");
+  const btnFila = document.getElementById("btnFila");
 
   if (status === "DISPONÍVEL") {
     statusDiv.style.color = "var(--verde)";
     statusDiv.innerText = "🟢 DISPONÍVEL – Pode entrar na fila";
-  } else {
+    btnFila.disabled = false;
+  } 
+  else if (status === "EM ATENDIMENTO") {
     statusDiv.style.color = "var(--vermelho)";
     statusDiv.innerText = "🔴 EM ATENDIMENTO – Pode entrar na fila";
+    btnFila.disabled = false;
+  } 
+  else if (status === "FECHADO") {
+    statusDiv.style.color = "var(--cinza)";
+    statusDiv.innerText = "⚫ FECHADO – Atendimento encerrado";
+    btnFila.disabled = true;
   }
 
   document.getElementById("atual").innerText = fila[0] || "---";
@@ -167,6 +185,8 @@ function atualizarTela() {
 }
 
 function entrarFila() {
+  if (status === "FECHADO") return;
+
   const nome = document.getElementById("nomeCliente").value.trim();
   if (!nome) return;
 
@@ -180,6 +200,12 @@ function mudarStatus() {
   status = status === "DISPONÍVEL"
     ? "EM ATENDIMENTO"
     : "DISPONÍVEL";
+  salvar();
+  atualizarTela();
+}
+
+function fecharBarbearia() {
+  status = "FECHADO";
   salvar();
   atualizarTela();
 }
