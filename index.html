@@ -122,7 +122,7 @@ li {
 
 <div class="card">
   <p><strong>💈 Atendendo agora:</strong> <span id="atual">---</span></p>
-  <p><strong>➡️ Próximo:</strong> <span id="proximo">---</span></p>
+  <p><strong>➡️ Próximo pode vir:</strong> <span id="proximo">---</span></p>
 
   <ul id="fila"></ul>
 </div>
@@ -142,7 +142,7 @@ li {
 
 <script>
 /* ===== CONFIGURAÇÕES ===== */
-const WHATSAPP = "5583998792009"; // TROQUE AQUI
+const WHATSAPP = "5591999999999"; // TROQUE AQUI
 const INSTAGRAM = "barbeariabk"; // TROQUE AQUI
 
 let status = localStorage.getItem("status") || "DISPONÍVEL";
@@ -175,7 +175,7 @@ function atualizarTela() {
   }
 
   document.getElementById("atual").innerText = fila[0] || "---";
-  document.getElementById("proximo pode vir").innerText = fila[1] || "---";
+  document.getElementById("proximo").innerText = fila[1] || "---";
 
   const lista = document.getElementById("fila");
   lista.innerHTML = "";
