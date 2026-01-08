@@ -11,7 +11,6 @@
   --azul: #7ecbff;
   --verde: #00ff88;
   --vermelho: #ff4d4d;
-  --cinza: #aaaaaa;
   --texto: #fff;
 }
 
@@ -30,16 +29,6 @@ body {
 header {
   text-align: center;
   margin-bottom: 20px;
-}
-
-/* 🔵 ESTILO DA FOTO / LOGO */
-.logo {
-  width: 130px;              /* TAMANHO DA FOTO */
-  height: 130px;
-  object-fit: cover;
-  border-radius: 50%;        /* DEIXA REDONDA */
-  border: 3px solid var(--azul);
-  margin-bottom: 10px;
 }
 
 header h1 {
@@ -84,12 +73,6 @@ button {
   cursor: pointer;
 }
 
-button:disabled {
-  background: #444;
-  color: #999;
-  cursor: not-allowed;
-}
-
 ul {
   list-style: none;
   padding: 0;
@@ -100,10 +83,6 @@ li {
   padding: 6px 0;
 }
 
-.admin button {
-  margin-top: 6px;
-}
-
 .social {
   display: flex;
   gap: 10px;
@@ -112,35 +91,43 @@ li {
 .social button {
   flex: 1;
 }
+
+.admin {
+  display: none;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-  <!-- 📸 AQUI É ONDE FICA A FOTO / LOGO -->
-  <!-- 👉 O NOME DO ARQUIVO TEM QUE SER: logo.png -->
-  <img src="logo.png" alt="Logo Barbearia BK" class="logo">
-
   <h1>BARBEARIA BK</h1>
   <p>Sem agendamento • Chegou, entrou na fila</p>
 </header>
 
+<!-- STATUS + ENTRADA -->
 <div class="card">
   <div id="statusTexto" class="status"></div>
 
   <input id="nomeCliente" placeholder="Digite seu nome">
-  <button id="btnFila" onclick="entrarFila()">Entrar na fila</button>
+  <button onclick="entrarFila()">Entrar na fila</button>
 </div>
 
+<!-- FILA -->
 <div class="card">
   <p><strong>💈 Atendendo agora:</strong> <span id="atual">---</span></p>
   <p><strong>➡️ Próximo pode vir:</strong> <span id="proximo">---</span></p>
-
   <ul id="fila"></ul>
 </div>
 
-<div class="card admin">
+<!-- LOGIN BARBEIRO -->
+<div class="card" id="loginAdmin">
+  <input id="senhaAdmin" type="password" placeholder="Senha do barbeiro">
+  <button onclick="loginAdmin()">Entrar como barbeiro</button>
+</div>
+
+<!-- PAINEL BARBEIRO -->
+<div class="card admin" id="adminPainel">
   <h3>Painel do Barbeiro</h3>
   <button onclick="mudarStatus()">Disponível / Atendimento</button>
   <button onclick="fecharBarbearia()">Fechado</button>
@@ -148,15 +135,17 @@ li {
   <button onclick="limparFila()">Limpar Fila</button>
 </div>
 
+<!-- REDES -->
 <div class="card social">
   <button onclick="abrirWhats()">WhatsApp</button>
   <button onclick="abrirInsta()">Instagram</button>
 </div>
 
 <script>
-/* ===== CONFIGURAÇÕES ===== */
-const WHATSAPP = "5591999999999"; // COLOQUE SEU NÚMERO AQUI
-const INSTAGRAM = "barbeariabk"; // COLOQUE SEU @ AQUI (SEM @)
+/* ===== CONFIG ===== */
+const WHATSAPP = "5583998792009";
+const INSTAGRAM = "https://www.instagram.com/barbearia_bk";
+const SENHA_ADMIN = "bk2026"; // TROQUE SE QUISER
 
 let status = localStorage.getItem("status") || "DISPONÍVEL";
 let fila = JSON.parse(localStorage.getItem("fila")) || [];
@@ -168,23 +157,17 @@ function salvar() {
 }
 
 function atualizarTela() {
-  const statusDiv = document.getElementById("statusTexto");
-  const btnFila = document.getElementById("btnFila");
+  const s = document.getElementById("statusTexto");
 
   if (status === "DISPONÍVEL") {
-    statusDiv.style.color = "var(--verde)";
-    statusDiv.innerText = "🟢 DISPONÍVEL – Pode entrar na fila";
-    btnFila.disabled = false;
-  } 
-  else if (status === "EM ATENDIMENTO") {
-    statusDiv.style.color = "var(--vermelho)";
-    statusDiv.innerText = "🔴 EM ATENDIMENTO – Pode entrar na fila";
-    btnFila.disabled = false;
-  } 
-  else if (status === "FECHADO") {
-    statusDiv.style.color = "var(--cinza)";
-    statusDiv.innerText = "⚫ FECHADO – Atendimento encerrado";
-    btnFila.disabled = true;
+    s.style.color = "var(--verde)";
+    s.innerText = "🟢 DISPONÍVEL – Pode entrar na fila";
+  } else if (status === "EM ATENDIMENTO") {
+    s.style.color = "var(--vermelho)";
+    s.innerText = "🔴 EM ATENDIMENTO – Pode entrar na fila";
+  } else {
+    s.style.color = "#aaa";
+    s.innerText = "⚫ FECHADO – Volte mais tarde";
   }
 
   document.getElementById("atual").innerText = fila[0] || "---";
@@ -192,17 +175,14 @@ function atualizarTela() {
 
   const lista = document.getElementById("fila");
   lista.innerHTML = "";
-  fila.forEach((nome, i) => {
-    lista.innerHTML += `<li>${i + 1}. ${nome}</li>`;
+  fila.forEach((n, i) => {
+    lista.innerHTML += `<li>${i + 1}. ${n}</li>`;
   });
 }
 
 function entrarFila() {
-  if (status === "FECHADO") return;
-
   const nome = document.getElementById("nomeCliente").value.trim();
-  if (!nome) return;
-
+  if (!nome || status === "FECHADO") return;
   fila.push(nome);
   document.getElementById("nomeCliente").value = "";
   salvar();
@@ -210,9 +190,7 @@ function entrarFila() {
 }
 
 function mudarStatus() {
-  status = status === "DISPONÍVEL"
-    ? "EM ATENDIMENTO"
-    : "DISPONÍVEL";
+  status = status === "DISPONÍVEL" ? "EM ATENDIMENTO" : "DISPONÍVEL";
   salvar();
   atualizarTela();
 }
@@ -240,7 +218,17 @@ function abrirWhats() {
 }
 
 function abrirInsta() {
-  window.open(`https://instagram.com/${INSTAGRAM}`, "_blank");
+  window.open(INSTAGRAM, "_blank");
+}
+
+function loginAdmin() {
+  const s = document.getElementById("senhaAdmin").value;
+  if (s === SENHA_ADMIN) {
+    document.getElementById("adminPainel").style.display = "block";
+    document.getElementById("loginAdmin").style.display = "none";
+  } else {
+    alert("Senha incorreta");
+  }
 }
 
 atualizarTela();
