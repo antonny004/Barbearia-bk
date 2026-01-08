@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -100,6 +101,29 @@ li {
 .admin {
   display: none;
 }
+
+/* ===== GALERIA ===== */
+.galeria {
+  overflow: hidden;
+  width: 100%;
+}
+
+.galeria-track {
+  display: flex;
+  gap: 10px;
+  animation: rolar 25s linear infinite;
+}
+
+.galeria img {
+  height: 120px;
+  border-radius: 14px;
+  border: 2px solid var(--azul);
+}
+
+@keyframes rolar {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
 </style>
 </head>
 
@@ -111,7 +135,7 @@ li {
   <p>Sem agendamento • Chegou, entrou na fila</p>
 </header>
 
-<!-- STATUS E ENTRADA -->
+<!-- STATUS + ENTRADA -->
 <div class="card">
   <div id="statusTexto" class="status"></div>
   <input id="nomeCliente" placeholder="Digite seu nome">
@@ -140,22 +164,41 @@ li {
   <button onclick="limparFila()">Limpar Fila</button>
 </div>
 
-<!-- REDES SOCIAIS -->
+<!-- REDES -->
 <div class="card social">
   <button onclick="abrirWhats()">WhatsApp</button>
   <button onclick="abrirInsta()">Instagram</button>
 </div>
 
+<!-- GALERIA ROLANDO -->
+<div class="card">
+  <h3 style="text-align:center;color:var(--azul)">🔥 Nossos cortes</h3>
+  <div class="galeria">
+    <div class="galeria-track">
+      <img src="fotos/foto1.jpg">
+      <img src="fotos/foto2.jpg">
+      <img src="fotos/foto3.jpg">
+      <img src="fotos/foto4.jpg">
+      <img src="fotos/foto5.jpg">
+
+      <!-- DUPLICADO PARA LOOP -->
+      <img src="fotos/foto1.jpg">
+      <img src="fotos/foto2.jpg">
+      <img src="fotos/foto3.jpg">
+      <img src="fotos/foto4.jpg">
+      <img src="fotos/foto5.jpg">
+    </div>
+  </div>
+</div>
+
 <script>
-/* ===== CONFIGURAÇÕES ===== */
 const WHATSAPP = "5583998792009";
 const INSTAGRAM = "https://www.instagram.com/barbearia_bk";
-const SENHA_ADMIN = "bk2026"; // MUDE SE QUISER
+const SENHA_ADMIN = "bk2026";
 
 let status = localStorage.getItem("status") || "DISPONÍVEL";
 let fila = JSON.parse(localStorage.getItem("fila")) || [];
 
-/* ===== FUNÇÕES ===== */
 function salvar() {
   localStorage.setItem("status", status);
   localStorage.setItem("fila", JSON.stringify(fila));
@@ -180,8 +223,8 @@ function atualizarTela() {
 
   const lista = document.getElementById("fila");
   lista.innerHTML = "";
-  fila.forEach((nome, i) => {
-    lista.innerHTML += `<li>${i + 1}. ${nome}</li>`;
+  fila.forEach((n, i) => {
+    lista.innerHTML += `<li>${i + 1}. ${n}</li>`;
   });
 }
 
