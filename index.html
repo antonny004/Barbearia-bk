@@ -7,50 +7,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root {
+:root{
   --fundo:#000;
   --azul:#7ecbff;
   --verde:#00ff88;
+  --cinza:#888;
   --vermelho:#ff4d4d;
   --texto:#fff;
 }
 
-* { box-sizing:border-box; font-family:Arial,sans-serif; }
+*{box-sizing:border-box;font-family:Arial,sans-serif}
 
-body {
+body{
   margin:0;
   background:var(--fundo);
   color:var(--texto);
   padding:20px;
 }
 
-header {
+header{
   text-align:center;
   margin-bottom:20px;
 }
 
-header img {
+header img{
   width:120px;
   margin-bottom:10px;
 }
 
-h1 { color:var(--azul); margin:0; }
+h1{color:var(--azul);margin:0}
 
-.card {
+.card{
   border:2px solid var(--azul);
   border-radius:18px;
   padding:15px;
   margin-bottom:15px;
 }
 
-.status {
+.status{
   text-align:center;
   font-size:20px;
   font-weight:bold;
   margin-bottom:10px;
 }
 
-input, button {
+input,button{
   width:100%;
   padding:12px;
   border-radius:12px;
@@ -59,22 +60,22 @@ input, button {
   margin-top:8px;
 }
 
-input {
+input{
   background:#111;
-  color:white;
+  color:#fff;
   border:1px solid var(--azul);
 }
 
-button {
+button{
   background:var(--azul);
-  color:black;
+  color:#000;
   font-weight:bold;
   cursor:pointer;
 }
 
-ul { list-style:none; padding:0; }
+ul{list-style:none;padding:0}
 
-li {
+li{
   display:flex;
   align-items:center;
   gap:10px;
@@ -82,7 +83,7 @@ li {
   border-bottom:1px solid #333;
 }
 
-.bolinha {
+.bolinha{
   width:28px;
   height:28px;
   border-radius:50%;
@@ -90,29 +91,35 @@ li {
   align-items:center;
   justify-content:center;
   font-weight:bold;
-  color:black;
+  color:#000;
 }
 
-.em { background:var(--verde); }
-.prox { background:var(--azul); }
-.agu { background:#777; }
+.em{background:var(--verde)}
+.prox{background:var(--azul)}
+.agu{background:var(--cinza)}
 
-.admin { display:none; }
+.whats{
+  margin-left:auto;
+  cursor:pointer;
+  font-size:20px;
+}
 
-.social {
+.admin{display:none}
+
+.social{
   display:flex;
   gap:10px;
 }
 
-.social button { flex:1; }
+.social button{flex:1}
 
-.galeria {
+.galeria{
   display:flex;
   gap:10px;
   overflow-x:auto;
 }
 
-.galeria img {
+.galeria img{
   height:120px;
   border-radius:12px;
 }
@@ -131,7 +138,7 @@ li {
   <div id="statusTexto" class="status"></div>
 
   <input id="nomeCliente" placeholder="Digite seu nome">
-  <input id="telefoneCliente" placeholder="WhatsApp (opcional)">
+  <input id="telefoneCliente" placeholder="WhatsApp (ex: 83999887766)">
   <button onclick="entrarFila()">Entrar na fila</button>
 </div>
 
@@ -155,7 +162,7 @@ li {
 </div>
 
 <div class="card social">
-  <button onclick="abrirWhats()">WhatsApp</button>
+  <button onclick="abrirWhatsBarbearia()">WhatsApp</button>
   <button onclick="abrirInsta()">Instagram</button>
 </div>
 
@@ -171,7 +178,7 @@ li {
 </div>
 
 <script>
-const WHATSAPP = "5583998792009";
+const WHATSAPP_BARBEARIA = "5583998792009";
 const INSTAGRAM = "barbearia_bk";
 const SENHA_BARBEIRO = "1234";
 
@@ -187,72 +194,95 @@ function salvar(){
 }
 
 function atualizar(){
-  const s = document.getElementById("statusTexto");
-  if(status==="DISPONÍVEL"){
-    s.style.color="var(--verde)";
-    s.innerText="🟢 DISPONÍVEL";
-  } else if(status==="FECHADO"){
-    s.style.color="var(--vermelho)";
-    s.innerText="⛔ FECHADO";
-  } else {
-    s.style.color="var(--azul)";
-    s.innerText="🔵 EM ATENDIMENTO";
-  }
+  const st = document.getElementById("statusTexto");
+  st.innerText = "Status: " + status;
+  st.style.color = status==="DISPONÍVEL" ? "var(--verde)" : "var(--azul)";
 
-  const ul=document.getElementById("fila");
-  ul.innerHTML="";
+  const ul = document.getElementById("fila");
+  ul.innerHTML = "";
+
   fila.forEach((c,i)=>{
-    let classe="agu",txt="Aguardando";
-    if(i===0){classe="em";txt="Em atendimento";}
-    else if(i===1){classe="prox";txt="Próximo pode vir";}
-    ul.innerHTML+=`
+    let classe="agu",texto="Aguardando";
+    if(i===0){classe="em";texto="Em atendimento";}
+    else if(i===1){classe="prox";texto="Próximo pode vir";}
+
+    ul.innerHTML += `
       <li>
         <div class="bolinha ${classe}">${i+1}</div>
         <div>
           <strong>${c.nome}</strong><br>
-          <small>${txt}</small>
+          <small>${texto}</small>
         </div>
-      </li>`;
+        ${c.telefone ? `<span class="whats" onclick='chamarWhats(${i})'>🟢</span>` : ""}
+      </li>
+    `;
   });
 
-  const h=document.getElementById("historico");
-  h.innerHTML="";
+  const h = document.getElementById("historico");
+  h.innerHTML = "";
   historico.filter(x=>x.data===hoje).forEach(x=>{
-    h.innerHTML+=`<li>✔ ${x.nome} (${x.hora})</li>`;
+    h.innerHTML += `<li>✔ ${x.nome} (${x.hora})</li>`;
   });
 }
 
 function entrarFila(){
-  const nome=document.getElementById("nomeCliente").value.trim();
-  if(nome.length<2) return alert("Nome inválido");
-  fila.push({nome,hora:new Date().toLocaleTimeString()});
-  document.getElementById("nomeCliente").value="";
+  const nome = nomeCliente.value.trim();
+  const tel = telefoneCliente.value.trim();
+
+  if(nome.length < 2){
+    alert("Digite um nome válido");
+    return;
+  }
+
+  fila.push({
+    nome:nome,
+    telefone:tel,
+    hora:new Date().toLocaleTimeString()
+  });
+
+  nomeCliente.value="";
+  telefoneCliente.value="";
   salvar(); atualizar();
 }
 
+function chamarWhats(i){
+  const c = fila[i];
+  const num = c.telefone.replace(/\D/g,"");
+  const msg = encodeURIComponent(
+    `Olá ${c.nome}, pode vir! 💈\nVocê é o próximo da Barbearia BK.`
+  );
+  location.href = `https://wa.me/55${num}?text=${msg}`;
+}
+
 function mudarStatus(){
-  status = status==="DISPONÍVEL" ? "EM ATENDIMENTO" :
-           status==="EM ATENDIMENTO" ? "FECHADO" : "DISPONÍVEL";
+  status = status==="DISPONÍVEL" ? "EM ATENDIMENTO" : "DISPONÍVEL";
   salvar(); atualizar();
 }
 
 function avancar(){
   if(!fila.length) return;
-  const a=fila.shift();
+  const a = fila.shift();
   historico.push({nome:a.nome,hora:a.hora,data:hoje});
   salvar(); atualizar();
 }
 
-function limparFila(){ fila=[]; salvar(); atualizar(); }
+function limparFila(){
+  fila=[]; salvar(); atualizar();
+}
 
 function loginBarbeiro(){
-  const s=prompt("Senha do barbeiro:");
+  const s = prompt("Senha do barbeiro:");
   if(s===SENHA_BARBEIRO)
     document.getElementById("painel").style.display="block";
 }
 
-function abrirWhats(){ window.open(`https://wa.me/${WHATSAPP}`,"_blank"); }
-function abrirInsta(){ window.open(`https://instagram.com/${INSTAGRAM}`,"_blank"); }
+function abrirWhatsBarbearia(){
+  location.href = "https://wa.me/" + WHATSAPP_BARBEARIA;
+}
+
+function abrirInsta(){
+  location.href = "https://instagram.com/" + INSTAGRAM;
+}
 
 atualizar();
 </script>
