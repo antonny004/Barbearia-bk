@@ -2,164 +2,133 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Barbearia Black | BK</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barbearia Black - BK</title>
 
 <style>
-:root {
-  --fundo: #000;
-  --azul: #7ecbff;
-  --verde: #00ff88;
-  --vermelho: #ff4d4d;
-  --texto: #fff;
-}
-
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
 body {
   margin: 0;
-  background: var(--fundo);
-  color: var(--texto);
-  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: #fff;
 }
 
-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-header img {
-  width: 120px;
-  margin-bottom: 10px;
-}
-
-header h1 {
-  color: var(--azul);
-  margin: 0;
-  font-size: 34px;
+.container {
+  max-width: 420px;
+  margin: auto;
+  padding: 15px;
 }
 
 .card {
-  border: 2px solid var(--azul);
-  border-radius: 18px;
+  border: 2px solid #7ecbff;
+  border-radius: 15px;
   padding: 15px;
   margin-bottom: 15px;
 }
 
+.logo {
+  display: block;
+  margin: 0 auto 10px;
+  max-width: 120px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #7ecbff;
+  font-size: 16px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  margin-top: 5px;
+}
+
 .status {
   text-align: center;
-  font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-input, button {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-size: 16px;
+.fila-item {
+  display: flex;
+  align-items: center;
+  background: #111;
+  border-radius: 10px;
+  padding: 10px;
   margin-top: 8px;
 }
 
-input {
-  background: #111;
-  color: white;
-  border: 1px solid var(--azul);
-}
-
-button {
-  background: var(--azul);
-  color: black;
+.numero {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #7ecbff;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
-  cursor: pointer;
+  margin-right: 10px;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  border-bottom: 1px solid #333;
-  padding: 6px 0;
-}
-
-.social {
+.fotos {
   display: flex;
-  gap: 10px;
-}
-
-.social button {
-  flex: 1;
-}
-
-/* GALERIA */
-.galeria {
-  display: flex;
-  gap: 10px;
   overflow-x: auto;
+  gap: 10px;
 }
 
-.galeria img {
-  height: 160px;
-  border-radius: 14px;
-  border: 2px solid var(--azul);
-}
-
-/* ADMIN */
-.admin {
-  display: none;
+.fotos img {
+  height: 120px;
+  border-radius: 10px;
 }
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<header>
-  <img src="logo.png" alt="Logo Barbearia BK">
-  <h1>BARBEARIA BK</h1>
-  <p>Sem agendamento • Chegou, entrou na fila</p>
-</header>
+<img src="logo.png" class="logo">
+
+<div class="card status" id="statusBarbearia"></div>
 
 <div class="card">
-  <div id="statusTexto" class="status"></div>
   <input id="nomeCliente" placeholder="Digite seu nome">
   <button onclick="entrarFila()">Entrar na fila</button>
 </div>
 
 <div class="card">
-  <p><strong>💈 Atendendo agora:</strong> <span id="atual">---</span></p>
-  <p><strong>➡️ Próximo pode vir:</strong> <span id="proximo">---</span></p>
-  <ul id="fila"></ul>
-</div>
-
-<div class="card social">
-  <button onclick="abrirWhats()">WhatsApp</button>
-  <button onclick="abrirInsta()">Instagram</button>
-</div>
-
-<!-- LOGIN ADMIN -->
-<div class="card">
-  <h3>Painel do Barbeiro</h3>
-  <input type="password" id="senhaAdmin" placeholder="Senha do barbeiro">
-  <button onclick="loginAdmin()">Entrar</button>
-</div>
-
-<!-- PAINEL ADMIN -->
-<div class="card admin" id="painelAdmin">
-  <h3>Controle do Atendimento</h3>
-  <button onclick="mudarStatus()">Alterar Status</button>
-  <button onclick="avancar()">Avançar Atendimento</button>
-  <button onclick="limparFila()">Limpar Fila</button>
+  <p>✂️ Atendendo agora: <b id="atual">---</b></p>
+  <p>➡️ Próximo pode vir: <b id="proximo">---</b></p>
 </div>
 
 <div class="card">
-  <h3 style="text-align:center;">🔥 Nossos cortes</h3>
-  <div class="galeria">
+  <input id="senha" placeholder="Senha do barbeiro" type="password">
+  <button onclick="login()">Entrar como barbeiro</button>
+
+  <div id="painel" style="display:none">
+    <button onclick="toggleBarbearia()">Abrir / Fechar Barbearia</button>
+    <button onclick="toggleStatus()">Disponível / Em atendimento</button>
+    <button onclick="avancar()">Avançar atendimento</button>
+    <button onclick="limpar()">Limpar fila</button>
+  </div>
+</div>
+
+<div class="card">
+  <button onclick="window.open('https://wa.me/5583998792009')">WhatsApp</button>
+  <button onclick="window.open('https://www.instagram.com/barbearia_bk')">Instagram</button>
+</div>
+
+<div class="card">
+  <h3>🔥 Nossos cortes</h3>
+  <div class="fotos">
     <img src="foto1.jpg">
     <img src="foto2.jpg">
     <img src="foto3.jpg">
@@ -168,87 +137,75 @@ li {
   </div>
 </div>
 
+<div class="card" id="listaFila"></div>
+
+</div>
+
 <script>
-/* CONFIGURAÇÕES */
-const WHATSAPP = "5583998792009";
-const INSTAGRAM = "barbearia_bk";
-const SENHA_ADMIN = "antonny2004"; // 👉 TROQUE AQUI
+const SENHA_ADMIN = "1234";
+let fila = [];
+let aberto = true;
+let status = "Disponível";
 
-let status = localStorage.getItem("status") || "DISPONÍVEL";
-let fila = JSON.parse(localStorage.getItem("fila")) || [];
+function atualizar() {
+  document.getElementById("statusBarbearia").innerText =
+    (aberto ? "🟢 Barbearia aberta" : "🔴 Barbearia fechada") + " | " + status;
 
-function salvar() {
-  localStorage.setItem("status", status);
-  localStorage.setItem("fila", JSON.stringify(fila));
-}
+  document.getElementById("atual").innerText = fila[0]?.nome || "---";
+  document.getElementById("proximo").innerText = fila[1]?.nome || "---";
 
-function atualizarTela() {
-  const statusDiv = document.getElementById("statusTexto");
-
-  if (status === "DISPONÍVEL") {
-    statusDiv.style.color = "var(--verde)";
-    statusDiv.innerText = "🟢 DISPONÍVEL – Pode entrar na fila";
-  } else {
-    statusDiv.style.color = "var(--vermelho)";
-    statusDiv.innerText = "🔴 EM ATENDIMENTO – Pode entrar na fila";
-  }
-
-  document.getElementById("atual").innerText = fila[0] || "---";
-  document.getElementById("proximo").innerText = fila[1] || "---";
-
-  const lista = document.getElementById("fila");
-  lista.innerHTML = "";
-  fila.forEach((nome, i) => {
-    lista.innerHTML += `<li>${i + 1}. ${nome}</li>`;
+  const lista = document.getElementById("listaFila");
+  lista.innerHTML = "<h3>Fila</h3>";
+  fila.forEach((p, i) => {
+    lista.innerHTML += `
+      <div class="fila-item">
+        <div class="numero">${i + 1}</div>
+        <div>
+          <b>${p.nome}</b><br>
+          ⏰ ${p.hora}
+        </div>
+      </div>`;
   });
 }
 
 function entrarFila() {
-  const nome = document.getElementById("nomeCliente").value.trim();
-  if (!nome) return;
-  fila.push(nome);
-  document.getElementById("nomeCliente").value = "";
-  salvar();
-  atualizarTela();
+  if (!aberto) return alert("Barbearia fechada no momento");
+  const nome = nomeCliente.value.trim();
+  if (nome.length < 3) return alert("Digite um nome válido (mínimo 3 letras)");
+  fila.push({ nome, hora: new Date().toLocaleTimeString() });
+  nomeCliente.value = "";
+  atualizar();
 }
 
-function loginAdmin() {
-  const senha = document.getElementById("senhaAdmin").value;
-  if (senha === SENHA_ADMIN) {
-    document.getElementById("painelAdmin").style.display = "block";
-    alert("Painel liberado");
+function login() {
+  if (senha.value === SENHA_ADMIN) {
+    painel.style.display = "block";
   } else {
     alert("Senha incorreta");
   }
 }
 
-function mudarStatus() {
-  status = status === "DISPONÍVEL" ? "EM ATENDIMENTO" : "DISPONÍVEL";
-  salvar();
-  atualizarTela();
+function toggleBarbearia() {
+  aberto = !aberto;
+  atualizar();
+}
+
+function toggleStatus() {
+  status = status === "Disponível" ? "Em atendimento" : "Disponível";
+  atualizar();
 }
 
 function avancar() {
   fila.shift();
-  salvar();
-  atualizarTela();
+  atualizar();
 }
 
-function limparFila() {
+function limpar() {
   fila = [];
-  salvar();
-  atualizarTela();
+  atualizar();
 }
 
-function abrirWhats() {
-  window.open(`https://wa.me/${WHATSAPP}`, "_blank");
-}
-
-function abrirInsta() {
-  window.open(`https://instagram.com/${INSTAGRAM}`, "_blank");
-}
-
-atualizarTela();
+atualizar();
 </script>
 
 </body>
