@@ -1,9 +1,10 @@
 
-<!DOCTYPE html>
+
+  <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Barbearia Black | BK</title>
+<title>Barbearia BK</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -11,8 +12,7 @@
   --fundo:#000;
   --azul:#7ecbff;
   --verde:#00ff88;
-  --cinza:#888;
-  --vermelho:#ff4d4d;
+  --cinza:#777;
   --texto:#fff;
 }
 
@@ -25,17 +25,9 @@ body{
   padding:20px;
 }
 
-header{
-  text-align:center;
-  margin-bottom:20px;
-}
-
-header img{
-  width:120px;
-  margin-bottom:10px;
-}
-
-h1{color:var(--azul);margin:0}
+header{text-align:center;margin-bottom:20px}
+header img{width:110px}
+h1{color:var(--azul);margin:5px 0}
 
 .card{
   border:2px solid var(--azul);
@@ -44,20 +36,15 @@ h1{color:var(--azul);margin:0}
   margin-bottom:15px;
 }
 
-.status{
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
-  margin-bottom:10px;
-}
+.status{text-align:center;font-size:18px;font-weight:bold}
 
 input,button{
   width:100%;
   padding:12px;
   border-radius:12px;
   border:none;
-  font-size:16px;
   margin-top:8px;
+  font-size:16px;
 }
 
 input{
@@ -73,13 +60,13 @@ button{
   cursor:pointer;
 }
 
-ul{list-style:none;padding:0}
+ul{list-style:none;padding:0;margin:0}
 
 li{
   display:flex;
   align-items:center;
   gap:10px;
-  padding:8px 0;
+  padding:10px 0;
   border-bottom:1px solid #333;
 }
 
@@ -90,8 +77,8 @@ li{
   display:flex;
   align-items:center;
   justify-content:center;
-  font-weight:bold;
   color:#000;
+  font-weight:bold;
 }
 
 .em{background:var(--verde)}
@@ -101,16 +88,12 @@ li{
 .whats{
   margin-left:auto;
   cursor:pointer;
-  font-size:20px;
+  font-size:22px;
 }
 
 .admin{display:none}
 
-.social{
-  display:flex;
-  gap:10px;
-}
-
+.social{display:flex;gap:10px}
 .social button{flex:1}
 
 .galeria{
@@ -129,16 +112,16 @@ li{
 <body>
 
 <header>
-  <img src="logo.png" alt="Logo">
+  <img src="logo.png">
   <h1>BARBEARIA BK</h1>
-  <p>Chegou, entrou na fila</p>
+  <p>Chegou, entrou na fila 💈</p>
 </header>
 
 <div class="card">
   <div id="statusTexto" class="status"></div>
 
   <input id="nomeCliente" placeholder="Digite seu nome">
-  <input id="telefoneCliente" placeholder="WhatsApp (ex: 83999887766)">
+  <input id="telefoneCliente" placeholder="WhatsApp (DDD + número)">
   <button onclick="entrarFila()">Entrar na fila</button>
 </div>
 
@@ -153,9 +136,9 @@ li{
 
 <div class="card admin" id="painel">
   <h3>Painel do Barbeiro</h3>
-  <button onclick="mudarStatus()">Alterar Status</button>
-  <button onclick="avancar()">Avançar Atendimento</button>
-  <button onclick="limparFila()">Limpar Fila</button>
+  <button onclick="mudarStatus()">Abrir / Fechar barbearia</button>
+  <button onclick="avancar()">Avançar atendimento</button>
+  <button onclick="limparFila()">Limpar fila</button>
 
   <h4>📜 Histórico de hoje</h4>
   <ul id="historico"></ul>
@@ -163,11 +146,11 @@ li{
 
 <div class="card social">
   <button onclick="abrirWhatsBarbearia()">WhatsApp</button>
-  <button onclick="abrirInsta()">Instagram</button>
+  <button onclick="abrirInstagram()">Instagram</button>
 </div>
 
 <div class="card">
-  <h3>Nosso trabalho</h3>
+  <h3>🔥 Nossos cortes</h3>
   <div class="galeria">
     <img src="foto1.jpg">
     <img src="foto2.jpg">
@@ -178,11 +161,11 @@ li{
 </div>
 
 <script>
-const WHATSAPP_BARBEARIA = "5583998792009";
+const WHATS_BARBEARIA = "5583998792009";
 const INSTAGRAM = "barbearia_bk";
-const SENHA_BARBEIRO = "1234";
+const SENHA = "1234";
 
-let status = localStorage.getItem("status") || "DISPONÍVEL";
+let status = localStorage.getItem("status") || "ABERTA | DISPONÍVEL";
 let fila = JSON.parse(localStorage.getItem("fila")) || [];
 let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let hoje = new Date().toLocaleDateString();
@@ -195,8 +178,8 @@ function salvar(){
 
 function atualizar(){
   const st = document.getElementById("statusTexto");
-  st.innerText = "Status: " + status;
-  st.style.color = status==="DISPONÍVEL" ? "var(--verde)" : "var(--azul)";
+  st.innerText = status;
+  st.style.color = status.includes("ABERTA") ? "var(--verde)" : "red";
 
   const ul = document.getElementById("fila");
   ul.innerHTML = "";
@@ -213,9 +196,8 @@ function atualizar(){
           <strong>${c.nome}</strong><br>
           <small>${texto}</small>
         </div>
-        ${c.telefone ? `<span class="whats" onclick='chamarWhats(${i})'>🟢</span>` : ""}
-      </li>
-    `;
+        ${c.telefone ? `<span class="whats" onclick="chamarWhats(${i})">🟢</span>` : ""}
+      </li>`;
   });
 
   const h = document.getElementById("historico");
@@ -235,9 +217,9 @@ function entrarFila(){
   }
 
   fila.push({
-    nome:nome,
-    telefone:tel,
-    hora:new Date().toLocaleTimeString()
+    nome,
+    telefone: tel,
+    hora: new Date().toLocaleTimeString()
   });
 
   nomeCliente.value="";
@@ -246,16 +228,23 @@ function entrarFila(){
 }
 
 function chamarWhats(i){
-  const c = fila[i];
-  const num = c.telefone.replace(/\D/g,"");
+  let num = fila[i].telefone.replace(/\D/g,"");
+
+  if(!num.startsWith("55")){
+    num = "55" + num;
+  }
+
   const msg = encodeURIComponent(
-    `Olá ${c.nome}, pode vir! 💈\nVocê é o próximo da Barbearia BK.`
+    `Olá ${fila[i].nome}, pode vir! 💈\nVocê é o próximo da Barbearia BK.`
   );
-  location.href = `https://wa.me/55${num}?text=${msg}`;
+
+  window.open(`https://wa.me/${num}?text=${msg}`,"_blank");
 }
 
 function mudarStatus(){
-  status = status==="DISPONÍVEL" ? "EM ATENDIMENTO" : "DISPONÍVEL";
+  status = status.includes("ABERTA")
+    ? "FECHADA ❌"
+    : "ABERTA | DISPONÍVEL";
   salvar(); atualizar();
 }
 
@@ -267,21 +256,25 @@ function avancar(){
 }
 
 function limparFila(){
-  fila=[]; salvar(); atualizar();
+  fila=[];
+  salvar(); atualizar();
 }
 
 function loginBarbeiro(){
   const s = prompt("Senha do barbeiro:");
-  if(s===SENHA_BARBEIRO)
+  if(s === SENHA){
     document.getElementById("painel").style.display="block";
+  }else{
+    alert("Senha incorreta");
+  }
 }
 
 function abrirWhatsBarbearia(){
-  location.href = "https://wa.me/" + WHATSAPP_BARBEARIA;
+  window.open("https://wa.me/"+WHATS_BARBEARIA,"_blank");
 }
 
-function abrirInsta(){
-  location.href = "https://instagram.com/" + INSTAGRAM;
+function abrirInstagram(){
+  window.open("https://instagram.com/"+INSTAGRAM,"_blank");
 }
 
 atualizar();
