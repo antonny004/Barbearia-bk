@@ -1,134 +1,167 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<title>Barbearia Black | BK</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Barbearia Black - BK</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #000;
-  color: #fff;
+:root {
+  --fundo:#000;
+  --azul:#7ecbff;
+  --verde:#00ff88;
+  --vermelho:#ff4d4d;
+  --texto:#fff;
 }
 
-.container {
-  max-width: 420px;
-  margin: auto;
-  padding: 15px;
+* { box-sizing:border-box; font-family:Arial,sans-serif; }
+
+body {
+  margin:0;
+  background:var(--fundo);
+  color:var(--texto);
+  padding:20px;
 }
+
+header {
+  text-align:center;
+  margin-bottom:20px;
+}
+
+header img {
+  width:120px;
+  margin-bottom:10px;
+}
+
+h1 { color:var(--azul); margin:0; }
 
 .card {
-  border: 2px solid #7ecbff;
-  border-radius: 15px;
-  padding: 15px;
-  margin-bottom: 15px;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 10px;
-  max-width: 120px;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: #7ecbff;
-  font-size: 16px;
-  margin-top: 8px;
-  cursor: pointer;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  margin-top: 5px;
+  border:2px solid var(--azul);
+  border-radius:18px;
+  padding:15px;
+  margin-bottom:15px;
 }
 
 .status {
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: 10px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:10px;
 }
 
-.fila-item {
-  display: flex;
-  align-items: center;
-  background: #111;
-  border-radius: 10px;
-  padding: 10px;
-  margin-top: 8px;
+input, button {
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  font-size:16px;
+  margin-top:8px;
 }
 
-.numero {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: #7ecbff;
-  color: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  margin-right: 10px;
+input {
+  background:#111;
+  color:white;
+  border:1px solid var(--azul);
 }
 
-.fotos {
-  display: flex;
-  overflow-x: auto;
-  gap: 10px;
+button {
+  background:var(--azul);
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-.fotos img {
-  height: 120px;
-  border-radius: 10px;
+ul { list-style:none; padding:0; }
+
+li {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 0;
+  border-bottom:1px solid #333;
+}
+
+.bolinha {
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  color:black;
+}
+
+.em { background:var(--verde); }
+.prox { background:var(--azul); }
+.agu { background:#777; }
+
+.admin { display:none; }
+
+.social {
+  display:flex;
+  gap:10px;
+}
+
+.social button { flex:1; }
+
+.galeria {
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+}
+
+.galeria img {
+  height:120px;
+  border-radius:12px;
 }
 </style>
 </head>
 
 <body>
-<div class="container">
 
-<img src="logo.png" class="logo">
-
-<div class="card status" id="statusBarbearia"></div>
+<header>
+  <img src="logo.png" alt="Logo">
+  <h1>BARBEARIA BK</h1>
+  <p>Chegou, entrou na fila</p>
+</header>
 
 <div class="card">
+  <div id="statusTexto" class="status"></div>
+
   <input id="nomeCliente" placeholder="Digite seu nome">
+  <input id="telefoneCliente" placeholder="WhatsApp (opcional)">
   <button onclick="entrarFila()">Entrar na fila</button>
 </div>
 
 <div class="card">
-  <p>✂️ Atendendo agora: <b id="atual">---</b></p>
-  <p>➡️ Próximo pode vir: <b id="proximo">---</b></p>
+  <h3>Fila de Atendimento</h3>
+  <ul id="fila"></ul>
 </div>
 
 <div class="card">
-  <input id="senha" placeholder="Senha do barbeiro" type="password">
-  <button onclick="login()">Entrar como barbeiro</button>
+  <button onclick="loginBarbeiro()">Entrar como barbeiro</button>
+</div>
 
-  <div id="painel" style="display:none">
-    <button onclick="toggleBarbearia()">Abrir / Fechar Barbearia</button>
-    <button onclick="toggleStatus()">Disponível / Em atendimento</button>
-    <button onclick="avancar()">Avançar atendimento</button>
-    <button onclick="limpar()">Limpar fila</button>
-  </div>
+<div class="card admin" id="painel">
+  <h3>Painel do Barbeiro</h3>
+  <button onclick="mudarStatus()">Alterar Status</button>
+  <button onclick="avancar()">Avançar Atendimento</button>
+  <button onclick="limparFila()">Limpar Fila</button>
+
+  <h4>📜 Histórico de hoje</h4>
+  <ul id="historico"></ul>
+</div>
+
+<div class="card social">
+  <button onclick="abrirWhats()">WhatsApp</button>
+  <button onclick="abrirInsta()">Instagram</button>
 </div>
 
 <div class="card">
-  <button onclick="window.open('https://wa.me/5583998792009')">WhatsApp</button>
-  <button onclick="window.open('https://www.instagram.com/barbearia_bk')">Instagram</button>
-</div>
-
-<div class="card">
-  <h3>🔥 Nossos cortes</h3>
-  <div class="fotos">
+  <h3>Nosso trabalho</h3>
+  <div class="galeria">
     <img src="foto1.jpg">
     <img src="foto2.jpg">
     <img src="foto3.jpg">
@@ -137,73 +170,89 @@ input {
   </div>
 </div>
 
-<div class="card" id="listaFila"></div>
-
-</div>
-
 <script>
-const SENHA_ADMIN = "1234";
-let fila = [];
-let aberto = true;
-let status = "Disponível";
+const WHATSAPP = "5583998792009";
+const INSTAGRAM = "barbearia_bk";
+const SENHA_BARBEIRO = "1234";
 
-function atualizar() {
-  document.getElementById("statusBarbearia").innerText =
-    (aberto ? "🟢 Barbearia aberta" : "🔴 Barbearia fechada") + " | " + status;
+let status = localStorage.getItem("status") || "DISPONÍVEL";
+let fila = JSON.parse(localStorage.getItem("fila")) || [];
+let historico = JSON.parse(localStorage.getItem("historico")) || [];
+let hoje = new Date().toLocaleDateString();
 
-  document.getElementById("atual").innerText = fila[0]?.nome || "---";
-  document.getElementById("proximo").innerText = fila[1]?.nome || "---";
+function salvar(){
+  localStorage.setItem("status",status);
+  localStorage.setItem("fila",JSON.stringify(fila));
+  localStorage.setItem("historico",JSON.stringify(historico));
+}
 
-  const lista = document.getElementById("listaFila");
-  lista.innerHTML = "<h3>Fila</h3>";
-  fila.forEach((p, i) => {
-    lista.innerHTML += `
-      <div class="fila-item">
-        <div class="numero">${i + 1}</div>
+function atualizar(){
+  const s = document.getElementById("statusTexto");
+  if(status==="DISPONÍVEL"){
+    s.style.color="var(--verde)";
+    s.innerText="🟢 DISPONÍVEL";
+  } else if(status==="FECHADO"){
+    s.style.color="var(--vermelho)";
+    s.innerText="⛔ FECHADO";
+  } else {
+    s.style.color="var(--azul)";
+    s.innerText="🔵 EM ATENDIMENTO";
+  }
+
+  const ul=document.getElementById("fila");
+  ul.innerHTML="";
+  fila.forEach((c,i)=>{
+    let classe="agu",txt="Aguardando";
+    if(i===0){classe="em";txt="Em atendimento";}
+    else if(i===1){classe="prox";txt="Próximo pode vir";}
+    ul.innerHTML+=`
+      <li>
+        <div class="bolinha ${classe}">${i+1}</div>
         <div>
-          <b>${p.nome}</b><br>
-          ⏰ ${p.hora}
+          <strong>${c.nome}</strong><br>
+          <small>${txt}</small>
         </div>
-      </div>`;
+      </li>`;
+  });
+
+  const h=document.getElementById("historico");
+  h.innerHTML="";
+  historico.filter(x=>x.data===hoje).forEach(x=>{
+    h.innerHTML+=`<li>✔ ${x.nome} (${x.hora})</li>`;
   });
 }
 
-function entrarFila() {
-  if (!aberto) return alert("Barbearia fechada no momento");
-  const nome = nomeCliente.value.trim();
-  if (nome.length < 3) return alert("Digite um nome válido (mínimo 3 letras)");
-  fila.push({ nome, hora: new Date().toLocaleTimeString() });
-  nomeCliente.value = "";
-  atualizar();
+function entrarFila(){
+  const nome=document.getElementById("nomeCliente").value.trim();
+  if(nome.length<2) return alert("Nome inválido");
+  fila.push({nome,hora:new Date().toLocaleTimeString()});
+  document.getElementById("nomeCliente").value="";
+  salvar(); atualizar();
 }
 
-function login() {
-  if (senha.value === SENHA_ADMIN) {
-    painel.style.display = "block";
-  } else {
-    alert("Senha incorreta");
-  }
+function mudarStatus(){
+  status = status==="DISPONÍVEL" ? "EM ATENDIMENTO" :
+           status==="EM ATENDIMENTO" ? "FECHADO" : "DISPONÍVEL";
+  salvar(); atualizar();
 }
 
-function toggleBarbearia() {
-  aberto = !aberto;
-  atualizar();
+function avancar(){
+  if(!fila.length) return;
+  const a=fila.shift();
+  historico.push({nome:a.nome,hora:a.hora,data:hoje});
+  salvar(); atualizar();
 }
 
-function toggleStatus() {
-  status = status === "Disponível" ? "Em atendimento" : "Disponível";
-  atualizar();
+function limparFila(){ fila=[]; salvar(); atualizar(); }
+
+function loginBarbeiro(){
+  const s=prompt("Senha do barbeiro:");
+  if(s===SENHA_BARBEIRO)
+    document.getElementById("painel").style.display="block";
 }
 
-function avancar() {
-  fila.shift();
-  atualizar();
-}
-
-function limpar() {
-  fila = [];
-  atualizar();
-}
+function abrirWhats(){ window.open(`https://wa.me/${WHATSAPP}`,"_blank"); }
+function abrirInsta(){ window.open(`https://instagram.com/${INSTAGRAM}`,"_blank"); }
 
 atualizar();
 </script>
